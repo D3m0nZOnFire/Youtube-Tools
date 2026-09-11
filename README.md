@@ -85,7 +85,7 @@ git clone https://github.com/D3m0nZOnFire/Youtube-Tools.git
 - **Settings** are stored via `chrome.storage.sync` and applied on every page load; toggling in the popup instantly messages all open YouTube tabs
 - **Content script** (`content.js`) runs on every `youtube.com` page; the Watch Later cleanup UI activates only on the Watch Later URL
 - **SPA navigation** is handled by a `MutationObserver` watching the full document, so the extension re-initializes correctly after YouTube's client-side navigation
-- **Progress labels** are read from `ytd-thumbnail-overlay-resume-playback-renderer #progress` (inline `style.width`)
+- **Progress labels** are read from the inline `style.width` of the resume-playback bar — `ytw-thumbnail-overlay-resume-playback-renderer [class*="ResumePlaybackProgress"]` (current YouTube markup), falling back to the legacy `ytd-thumbnail-overlay-resume-playback-renderer #progress`. Labels refresh on every sync, so bars that render late are picked up
 - **Deletion** simulates YouTube's own UI: opens the video's context menu, finds the "Remove from Watch Later" item, and clicks it — no API calls
 - **Responsive layout** detects whether YouTube is in wide or compact mode (`offsetWidth` check on `.wide-screen-form` / `.small-screen-form`) and places the button accordingly
 

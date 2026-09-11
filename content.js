@@ -34,8 +34,14 @@ const tidyState = {
 const sleep = ms => new Promise(r => setTimeout(r, ms));
 const isWL = () => location.href.includes('/playlist?list=WL');
 
+// YouTube moved from ytd-…#progress to ytw-… with a hashed-style class name; support both.
+const PROGRESS_SELECTOR = [
+  'ytw-thumbnail-overlay-resume-playback-renderer [class*="ResumePlaybackProgress"]',
+  'ytd-thumbnail-overlay-resume-playback-renderer #progress',
+].join(',');
+
 function getProgress(video) {
-  const el = video.querySelector('ytd-thumbnail-overlay-resume-playback-renderer #progress');
+  const el = video.querySelector(PROGRESS_SELECTOR);
   return el?.style.width ? parseFloat(el.style.width) || 0 : 0;
 }
 
@@ -52,14 +58,21 @@ function esc(s) {
 // === PROGRESS LABELS (always visible) ===
 function syncProgressLabels() {
   document.querySelectorAll('ytd-playlist-video-renderer').forEach(v => {
-    if (v.querySelector('.tidy-label')) return;
+    const meta = v.querySelector('#meta');
+    if (!meta) return;
     const pct = getProgress(v);
     const cat = getCategory(pct);
-    const label = document.createElement('div');
-    label.className = `tidy-label tidy-label-${cat}`;
-    label.textContent = cat === 'watched' ? 'Watched' : cat === 'partial' ? `${Math.round(pct)}%` : 'Not started';
-    const meta = v.querySelector('#meta');
-    if (meta) meta.appendChild(label);
+    const className = `tidy-label tidy-label-${cat}`;
+    const text = cat === 'watched' ? 'Watched' : cat === 'partial' ? `${Math.round(pct)}%` : 'Not started';
+    // Progress overlays can render after the row (and rows get reused), so refresh instead of
+    // creating once. Only write on change: DOM writes retrigger the MutationObserver sync loop.
+    let label = v.querySelector('.tidy-label');
+    if (!label) {
+      label = document.createElement('div');
+      meta.appendChild(label);
+    }
+    if (label.className !== className) label.className = className;
+    if (label.textContent !== text) label.textContent = text;
   });
 }
 
