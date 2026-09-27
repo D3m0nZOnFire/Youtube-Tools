@@ -35,7 +35,10 @@ const sleep = ms => new Promise(r => setTimeout(r, ms));
 const isWL = () => location.href.includes('/playlist?list=WL');
 
 function getProgress(video) {
-  const el = video.querySelector('ytd-thumbnail-overlay-resume-playback-renderer #progress');
+  // YouTube moved from ytd-…#progress to ytw-… with a class-named bar; support both
+  const el = video.querySelector(
+    'ytw-thumbnail-overlay-resume-playback-renderer > div, ytd-thumbnail-overlay-resume-playback-renderer #progress'
+  );
   return el?.style.width ? parseFloat(el.style.width) || 0 : 0;
 }
 
@@ -52,14 +55,17 @@ function esc(s) {
 // === PROGRESS LABELS (always visible) ===
 function syncProgressLabels() {
   document.querySelectorAll('ytd-playlist-video-renderer').forEach(v => {
-    if (v.querySelector('.tidy-label')) return;
     const pct = getProgress(v);
     const cat = getCategory(pct);
-    const label = document.createElement('div');
+    let label = v.querySelector('.tidy-label');
+    if (!label) {
+      const meta = v.querySelector('#meta');
+      if (!meta) return;
+      label = document.createElement('div');
+      meta.appendChild(label);
+    }
     label.className = `tidy-label tidy-label-${cat}`;
     label.textContent = cat === 'watched' ? 'Watched' : cat === 'partial' ? `${Math.round(pct)}%` : 'Not started';
-    const meta = v.querySelector('#meta');
-    if (meta) meta.appendChild(label);
   });
 }
 
