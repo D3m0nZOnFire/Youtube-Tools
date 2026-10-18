@@ -2,6 +2,8 @@
 
 A Chrome/Brave extension that enhances YouTube with sitewide filters and a bulk Watch Later cleanup tool.
 
+<p align="center"><img src="docs/watch-later-cleanup.gif" alt="Watch Later cleanup: select videos by watch progress, then review before deleting" width="720"></p>
+
 ## Table of Contents
 
 - [Features](#features)
