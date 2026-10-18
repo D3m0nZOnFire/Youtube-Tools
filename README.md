@@ -36,20 +36,22 @@ A Chrome/Brave extension that enhances YouTube with sitewide filters and a bulk 
 
 ## Installation
 
-### From source (developer mode)
+### From a release (developer mode)
 
-1. Clone the repository
-```bash
-git clone https://github.com/D3m0nZOnFire/Youtube-Tools.git
-```
+1. Download `youtube-tools-v*.zip` from the [latest release](https://github.com/D3m0nZOnFire/Youtube-Tools/releases/latest) and unzip it
 
 2. Open `chrome://extensions/` (or `brave://extensions/`)
 
 3. Enable **Developer mode** (toggle in the top-right corner)
 
-4. Click **Load unpacked** and select the cloned folder
+4. Click **Load unpacked** and select the unzipped `youtube-tools` folder
 
 5. Navigate to [youtube.com](https://www.youtube.com) — the extension is active immediately
+
+To run from source instead, clone the repository and load the cloned folder in step 4:
+```bash
+git clone https://github.com/D3m0nZOnFire/Youtube-Tools.git
+```
 
 ---
 
